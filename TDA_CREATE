@@ -1,0 +1,78 @@
+CREATE DATABASE TDA;
+
+CREATE TABLE USERS
+(
+    UserID CHAR(30) NOT NULL,
+    Name VARCHAR(50),
+    Employment VARCHAR(50),
+    Email VARCHAR(100),
+    Income DOUBLE,
+    DOB DATE,
+    Username VARCHAR(50) NOT NULL,
+    UserPassword VARCHAR(50) NOT NULL,
+    Address VARCHAR(100),
+    Objective VARCHAR(100),
+    Phone CHAR(10),
+    SSN CHAR(9),
+    PRIMARY KEY (UserID)
+);
+
+CREATE TABLE TRANSACTIONS
+(
+    TransactionID CHAR(30) NOT NULL,
+    Side CHAR(15),
+    TransDate DATE,
+    Filled BOOLEAN,
+    Symbol CHAR(30),
+    Quantity INT,
+    OrderType CHAR(30),
+    UserID CHAR(30) NOT NULL,
+    PRIMARY KEY (TransactionID),
+    FOREIGN KEY (UserID) REFERENCES USERS(UserID)
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE POSITIONS
+(
+    PositionID CHAR(30) NOT NULL,
+    ShareCount INT,
+    CostBasis  DOUBLE,
+    MarketValue DOUBLE,
+    OpenDate DATE,
+    CloseDate DATE,
+    Symbol CHAR(15),
+    RealizedGain DOUBLE,
+    UnrealizedGain DOUBLE,
+    UserID CHAR(30) NOT NULL,
+    TransactionID CHAR(30) NOT NULL,
+    PRIMARY KEY (PositionID),
+    FOREIGN KEY (UserID) REFERENCES USERS(UserID)
+    ON UPDATE CASCADE,
+    FOREIGN KEY (TransactionID) REFERENCES TRANSACTIONS(TransactionID)
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE COMPANY
+(
+    CompanyID CHAR(30) NOT NULL,
+    CompanyName VARCHAR(50),
+    CompanyContact VARCHAR(80),
+    ShareCount INT,
+    PRIMARY KEY (CompanyID)
+);
+
+CREATE TABLE PURCHASE_EVENT
+(
+    PurchaseEventID CHAR(30) NOT NULL,
+    HasReturned BOOLEAN,
+    Item VARCHAR(50),
+    PurchaseDate DATE,
+    Cost DOUBLE,
+    CompanyID CHAR(30) NOT NULL,
+    UserID CHAR(30) NOT NULL,
+    PRIMARY KEY (PurchaseEventID),
+    FOREIGN KEY (CompanyID) REFERENCES COMPANY(CompanyID)
+    ON UPDATE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES USERS(UserID)
+    ON UPDATE CASCADE
+);
